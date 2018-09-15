@@ -3,9 +3,9 @@
 
 #include "TypeNames.hpp"
 
-namespace SPGL
+namespace spgl
 {
-  template<class T = Int32_t>
+  template<class T = Int32>
   struct Vector2D
   {
   public: /* Functions */

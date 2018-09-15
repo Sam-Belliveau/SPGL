@@ -1,74 +1,113 @@
 #ifndef SPGL_IMAGE_HPP
 #define SPGL_IMAGE_HPP 1
 
-#include <array> // std::array
+#include <vector>
 
 #include "TypeNames.hpp"
 #include "Vector2D.hpp"
 #include "Color.hpp"
 
-namespace SPGL
+namespace spgl // Initalization
 {
-  template<std::size_t iwidth, std::size_t iheight>
   class Image
   {
-  public: /* Class Info Function */
-    constexpr std::size_t size()
-    { return iheight*iwidth; }
-
-    constexpr std::size_t bytes()
-    { return size()*3; }
-
-    constexpr std::size_t height()
-    { return iheight; }
-
-    constexpr std::size_t width()
-    { return iwidth; }
+  public: /* Information */
+    Size height() const;
+    Size width()  const;
+    bool empty()  const;
+    Size size()   const;
+    Size bytes()  const;
+    Color* data();
 
   public: /* Constructors */
-    // Empty
-    Image() {}
+    Image();
+    ~Image();
 
-    // Other Image
-    Image(const Image<iheight, iwidth> &in)
-    { pixels = in.pixels; }
+    Image(const Image &in);
+    Image(const Size &x, const Size &y, const Color &f = Color());
+    Image(const Size &x, const Size &y, const Color* p);
 
-    // Color Array
-    Image(const std::array<Color, iheight*iwidth> &in) : pixels{in} {}
+    void create(const Size &x,
+                const Size &y,
+                const Color &f = Color());
 
-    // RGB Byte Array
-    Image(const std::array<UInt8_t, iheight*iwidth*3> &in)
-    {
-      for(std::size_t i = 0; i < iheight*iwidth*3; i += 3)
-      { pixels[i >> 2] = Color(in[i+0], in[i+1], in[i+2]); }
-    }
+    void create(const Size &x,
+                const Size &y,
+                const Color* p);
 
-    // Fill
-    Image(const Color &in)
-    {
-      for(Color& a : pixels)
-      { a = in; }
-    }
-
-  public: /* Editing Functions */
-    constexpr Color& at(const std::size_t &x, const std::size_t &y)
-    { return pixels[y*iwidth + x]; }
-
-    constexpr Color& operator[](const Vector2D<std::size_t> &i)
-    { return at(i.x, i.y); }
-
-    constexpr Color& at(const std::size_t &i)
-    { return pixels[i]; }
-
-    constexpr Color& operator[](const std::size_t &i)
-    { return at(i); }
-
-    constexpr UInt32_t* getPixelArray()
-    { return reinterpret_cast<UInt32_t*>(&pixels); }
+  public: /* Functions */
+    Color& operator[](const Size &i);
+    Color& getPixel(const Size &x, const Size &y);
 
   private: /* Raw Data */
-    std::array<Color, iheight*iwidth> pixels;
+    std::vector<Color> pixels;
+    Vector2D<Size> i_size;
   };
+}
+
+namespace spgl // Definitions
+{
+  // Information
+  Size Image::height() const { return i_size.y; }
+  Size Image::width()  const { return i_size.x; }
+  bool Image::empty()  const { return height() && width(); }
+  Size Image::size()   const { return width()*height(); }
+  Size Image::bytes()  const { return size()*sizeof(Color); }
+  Color* Image::data() { return pixels.data(); }
+
+  // Constructors
+  Image::Image() { }
+  Image::~Image(){ }
+
+  Image::Image(const Image &in)
+    : pixels{in.pixels}, i_size{in.i_size} {}
+
+  Image::Image(const Size &x, const Size &y, const Color &f)
+  { create(x, y, f); }
+
+  Image::Image(const Size &x, const Size &y, const Color* p)
+  { create(x, y, p); }
+
+  void Image::create( const Size &x,
+                      const Size &y,
+                      const Color &f)
+  {
+    if(x && y)
+    {
+      i_size.x = x; i_size.y = y;
+      std::vector<Color> temp(x*y);
+      for(Color &i : temp) i = f;
+      temp.swap(pixels);
+    }
+    else
+    {
+      std::vector<Color>().swap(pixels);
+      i_size.x = 0; i_size.y = 0;
+    }
+  }
+
+  void Image::create( const Size &x,
+                      const Size &y,
+                      const Color* p)
+  {
+    if(x && y)
+    {
+      i_size.x = x; i_size.y = y;
+      std::vector<Color> temp(p, p + x * y * sizeof(Color));
+      temp.swap(temp);
+    }
+    else
+    {
+      std::vector<Color>().swap(pixels);
+      i_size.x = 0; i_size.y = 0;
+    }
+  }
+
+  Color& Image::operator[](const Size &i)
+  { return pixels[i]; }
+
+  Color& Image::getPixel(const Size &x, const Size &y)
+  { return pixels[y*i_size.x + x]; }
 }
 
 #endif // SPGL_IMAGE_HPP

@@ -14,7 +14,7 @@ namespace spgl
     Vector2D(const Vector2D &in) :
       x{in.x}, y{in.y} {}
 
-    Vector2D(const T &ix, const T &iy):
+    Vector2D(const T &ix, const T &iy) :
       x{ix}, y{iy} {}
 
     template<class iT>

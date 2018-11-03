@@ -1,7 +1,7 @@
 #ifndef SPGL_IMAGE_HPP
 #define SPGL_IMAGE_HPP 1
 
-#include <vector>
+#include <array>
 
 #include "TypeNames.hpp"
 #include "Vector2D.hpp"
@@ -9,6 +9,7 @@
 
 namespace spgl // Initalization
 {
+  template<Size x, Size y>
   class Image
   {
   public: /* Information */
@@ -21,93 +22,58 @@ namespace spgl // Initalization
 
   public: /* Constructors */
     Image();
-    ~Image();
 
-    Image(const Image &in);
-    Image(const Size &x, const Size &y, const Color &f = Color());
-    Image(const Size &x, const Size &y, const Color* p);
-
-    void create(const Size &x,
-                const Size &y,
-                const Color &f = Color());
-
-    void create(const Size &x,
-                const Size &y,
-                const Color* p);
+    Image(const Image<x, y> &in);
+    Image(const Color &f = Color(0x00));
 
   public: /* Functions */
     Color& operator[](const Size &i);
-    Color& getPixel(const Size &x, const Size &y);
+    Color& getPixel(const Size &inX, const Size &inY);
 
   private: /* Raw Data */
-    std::vector<Color> pixels;
-    Vector2D<Size> i_size;
+    std::array<Color, x*y> arr;
   };
 }
 
 namespace spgl // Definitions
 {
   // Information
-  Size Image::height() const { return i_size.y; }
-  Size Image::width()  const { return i_size.x; }
-  bool Image::empty()  const { return height() && width(); }
-  Size Image::size()   const { return width()*height(); }
-  Size Image::bytes()  const { return size()*sizeof(Color); }
-  Color* Image::data() { return pixels.data(); }
+  template<Size x, Size y>
+  Size Image<x, y>::height() const { return x; }
+
+  template<Size x, Size y>
+  Size Image<x, y>::width()  const { return y; }
+
+  template<Size x, Size y>
+  bool Image<x, y>::empty()  const { return height() && width(); }
+
+  template<Size x, Size y>
+  Size Image<x, y>::size()   const { return width()*height(); }
+
+  template<Size x, Size y>
+  Size Image<x, y>::bytes()  const { return size()*sizeof(Color); }
+
+  template<Size x, Size y>
+  Color* Image<x, y>::data() { return arr.data(); }
 
   // Constructors
-  Image::Image() { }
-  Image::~Image(){ }
+  template<Size x, Size y>
+  Image<x, y>::Image() { }
 
-  Image::Image(const Image &in)
-    : pixels{in.pixels}, i_size{in.i_size} {}
+  template<Size x, Size y>
+  Image<x, y>::Image(const Image<x, y> &in) : arr{in.arr} {}
 
-  Image::Image(const Size &x, const Size &y, const Color &f)
-  { create(x, y, f); }
+  template<Size x, Size y>
+  Image<x, y>::Image(const Color &in) : arr{in} {}
 
-  Image::Image(const Size &x, const Size &y, const Color* p)
-  { create(x, y, p); }
+  // Getters
+  template<Size x, Size y>
+  Color& Image<x, y>::operator[](const Size &i)
+  { return arr[i]; }
 
-  void Image::create( const Size &x,
-                      const Size &y,
-                      const Color &f)
-  {
-    if(x && y)
-    {
-      i_size.x = x; i_size.y = y;
-      std::vector<Color> temp(x*y);
-      for(Color &i : temp) i = f;
-      temp.swap(pixels);
-    }
-    else
-    {
-      std::vector<Color>().swap(pixels);
-      i_size.x = 0; i_size.y = 0;
-    }
-  }
-
-  void Image::create( const Size &x,
-                      const Size &y,
-                      const Color* p)
-  {
-    if(x && y)
-    {
-      i_size.x = x; i_size.y = y;
-      std::vector<Color> temp(p, p + x * y * sizeof(Color));
-      temp.swap(temp);
-    }
-    else
-    {
-      std::vector<Color>().swap(pixels);
-      i_size.x = 0; i_size.y = 0;
-    }
-  }
-
-  Color& Image::operator[](const Size &i)
-  { return pixels[i]; }
-
-  Color& Image::getPixel(const Size &x, const Size &y)
-  { return pixels[y*i_size.x + x]; }
+  template<Size x, Size y>
+  Color& Image<x, y>::getPixel(const Size &inX, const Size &inY)
+  { return arr[inY*x + inX]; }
 }
 
 #endif // SPGL_IMAGE_HPP

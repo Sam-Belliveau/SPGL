@@ -20,7 +20,7 @@ namespace spgl
     template<class iT>
     operator Vector2D<iT>()
     { return Vector2D<iT>(static_cast<iT>(x), static_cast<iT>(y)); }
-
+    
   public: /* Variables */
     T x, y;
   };

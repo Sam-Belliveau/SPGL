@@ -1,14 +1,14 @@
 #ifndef SPGL_WINDOW_HPP
 #define SPGL_WINDOW_HPP 1
 
-#include <SDL.h> // Graphics
+#include <SDL2/SDL.h> // Graphics
 
 #include "TypeNames.hpp"
 #include "Vector2D.hpp"
 #include "Color.hpp"
 #include "Image.hpp"
 
-namespace spgl
+namespace spgl // Definitions
 {
   // Main window should be made first and destroyed last
   template<Size x, Size y, Size s = 1, bool main_window = true>
@@ -16,7 +16,7 @@ namespace spgl
   {
   public: /* Functions */
     /* Initalization */
-    Window(const char* name = "");
+    Window(const char* name = "SPGL Window");
     ~Window();
 
     /* Running Stuff */
@@ -24,7 +24,7 @@ namespace spgl
     bool isRunning() const;
 
     /* Events */
-    void updateWindow();
+    void update();
 
     /* Information */
     bool isMouseDown() const;
@@ -45,11 +45,11 @@ namespace spgl
   };
 }
 
-namespace spgl
+namespace spgl // Implementations
 {
   /* Initalization */
   template<Size x, Size y, Size s, bool main_window>
-  Window<x,y,s,main_window>::Window(const char* name = "")
+  Window<x,y,s,main_window>::Window(const char* name)
   {
     if(main_window)
     { SDL_Init(SDL_INIT_VIDEO); }
@@ -60,7 +60,7 @@ namespace spgl
     renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_RenderSetScale(renderer, (float)s, (float)s);
 
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888,
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
       SDL_TEXTUREACCESS_STATIC, x, y);
 
     running = true;
@@ -68,22 +68,22 @@ namespace spgl
 
   template<Size x, Size y, Size s, bool main_window>
   Window<x,y,s,main_window>::~Window()
-  {
-    if(running)
-    { close(); }
-
-    if(main_window)
-    { SDL_Quit(); }
-  }
+  { close(); }
 
   /* Running Stuff */
   template<Size x, Size y, Size s, bool main_window>
   void Window<x,y,s,main_window>::close()
   {
-    running = false;
-    SDL_DestroyTexture(texture);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    if(running)
+    {
+      running = false;
+      SDL_DestroyTexture(texture);
+      SDL_DestroyRenderer(renderer);
+      SDL_DestroyWindow(window);
+
+      if(main_window)
+      { SDL_Quit(); }
+    }
   }
 
   template<Size x, Size y, Size s, bool main_window>
@@ -92,31 +92,33 @@ namespace spgl
 
   /* Events */
   template<Size x, Size y, Size s, bool main_window>
-  void Window<x,y,s,main_window>::updateWindow()
+  void Window<x,y,s,main_window>::update()
   {
     if(!running) { return; }
 
-    SDL_PollEvent(&event);
-    switch (event.type)
+    while(SDL_PollEvent(&event))
     {
-    case SDL_QUIT:
-      close();
-      break;
+      switch (event.type)
+      {
+      case SDL_QUIT:
+        close();
+        break;
 
-    case SDL_MOUSEBUTTONUP:
-      if (event.button.button == SDL_BUTTON_LEFT)
-        mouseDown = false;
-      break;
+      case SDL_MOUSEBUTTONUP:
+        if (event.button.button == SDL_BUTTON_LEFT)
+          mouseDown = false;
+        break;
 
-    case SDL_MOUSEBUTTONDOWN:
-      if (event.button.button == SDL_BUTTON_LEFT)
-        mouseDown = true;
-      break;
+      case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+          mouseDown = true;
+        break;
 
-    case SDL_MOUSEMOTION:
-      mousePixel.x = event.motion.x/scale;
-      mousePixel.y = event.motion.y/scale;
-      break;
+      case SDL_MOUSEMOTION:
+        mousePixel.x = event.motion.x/s;
+        mousePixel.y = event.motion.y/s;
+        break;
+      }
     }
   }
 
@@ -135,8 +137,7 @@ namespace spgl
   {
     if(!running) { return; }
 
-    SDL_UpdateTexture(texture, NULL, in.getPixelArray(), width*4);
-    SDL_RenderClear(renderer);
+    SDL_UpdateTexture(texture, NULL, in.data(), x*4);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
   }

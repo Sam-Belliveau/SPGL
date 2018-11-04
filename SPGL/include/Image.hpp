@@ -7,7 +7,7 @@
 #include "Vector2D.hpp"
 #include "Color.hpp"
 
-namespace spgl // Initalization
+namespace spgl // Definitions
 {
   template<Size x, Size y>
   class Image
@@ -21,21 +21,20 @@ namespace spgl // Initalization
     Color* data();
 
   public: /* Constructors */
-    Image();
-
+    Image() {}
     Image(const Image<x, y> &in);
-    Image(const Color &f = Color(0x00));
+    Image(const Color &f);
 
   public: /* Functions */
     Color& operator[](const Size &i);
     Color& getPixel(const Size &inX, const Size &inY);
 
   private: /* Raw Data */
-    std::array<Color, x*y> arr;
+    Color arr[x*y];
   };
 }
 
-namespace spgl // Definitions
+namespace spgl // Implementation
 {
   // Information
   template<Size x, Size y>
@@ -54,12 +53,9 @@ namespace spgl // Definitions
   Size Image<x, y>::bytes()  const { return size()*sizeof(Color); }
 
   template<Size x, Size y>
-  Color* Image<x, y>::data() { return arr.data(); }
+  Color* Image<x, y>::data() { return arr; }
 
   // Constructors
-  template<Size x, Size y>
-  Image<x, y>::Image() { }
-
   template<Size x, Size y>
   Image<x, y>::Image(const Image<x, y> &in) : arr{in.arr} {}
 

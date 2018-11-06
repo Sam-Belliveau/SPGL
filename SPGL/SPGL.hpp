@@ -1,6 +1,8 @@
 #ifndef SPGL_HPP
 #define SPGL_HPP 1
 
+#define SPGL_NAMESPACE_MACRO SPGL
+
 #include "include/TypeNames.hpp"
 #include "include/Vector2D.hpp"
 #include "include/Color.hpp"

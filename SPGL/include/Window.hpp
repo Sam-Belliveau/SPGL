@@ -8,7 +8,7 @@
 #include "Color.hpp"
 #include "Image.hpp"
 
-namespace spgl // Definitions
+namespace SPGL // Definitions
 {
   // Main window should be made first and destroyed last
   template<Size x, Size y, Size s = 1, bool main_window = true>
@@ -45,7 +45,7 @@ namespace spgl // Definitions
   };
 }
 
-namespace spgl // Implementations
+namespace SPGL // Implementations
 {
   /* Initalization */
   template<Size x, Size y, Size s, bool main_window>

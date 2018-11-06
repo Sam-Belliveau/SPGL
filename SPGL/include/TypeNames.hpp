@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace spgl
+namespace SPGL
 {
   /* Floats */
   using Float80 = long double;

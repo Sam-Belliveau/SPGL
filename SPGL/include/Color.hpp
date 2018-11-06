@@ -1,12 +1,30 @@
 #ifndef SPGL_COLOR_HPP
 #define SPGL_COLOR_HPP 1
 
+#include <algorithm> // std::max
+
 #include "TypeNames.hpp"
 
-namespace spgl // Definitions
+namespace SPGL // Definitions
 {
   struct Color
   {
+  public:
+    struct HSV
+    {
+    public:
+      constexpr HSV();
+      constexpr HSV(const UInt8 ih, const UInt8 is = 255, const UInt8 iv = 255);
+      constexpr HSV(const HSV& in);
+
+      constexpr HSV(const Color in);
+
+    public:
+      UInt8 v;
+      UInt8 s;
+      UInt8 h;
+    };
+
   public: /* Enum */
     /* HOW BYTEORDER WORKS:
      * It is stored as an 8 bit number,
@@ -38,18 +56,15 @@ namespace spgl // Definitions
     constexpr Color(const UInt8 ir, const UInt8 ig,
                     const UInt8 ib, const UInt8 ia = 0xff);
 
+    // HSV Constructor
+    constexpr Color(const HSV in);
+
     // Grayscale Constructor
     constexpr Color(const UInt8 in);
 
     // 32 bit int output
     template<ByteOrder order = ByteOrder::RGBA>
     constexpr UInt32 toInt() const;
-
-    // HSV
-    void setHSV(UInt8 h, UInt8 s, UInt8 v);
-
-    // Operators
-    friend bool operator==(const Color a, const Color b);
 
   public: /* Variables */
     UInt8 a;
@@ -72,8 +87,35 @@ namespace spgl // Definitions
   };
 }
 
-namespace spgl // Implementation
+namespace SPGL // Implementation
 {
+  /*** HSV ***/
+  constexpr Color::HSV::HSV() : v{0}, s{0}, h{0} {}
+
+  constexpr Color::HSV::HSV(const UInt8 ih, const UInt8 is,
+                            const UInt8 iv) : v{iv}, s{is}, h{ih} {}
+
+  constexpr Color::HSV::HSV(const HSV& in) : v{in.v}, s{in.s}, h{in.h} {}
+
+  constexpr Color::HSV::HSV(const Color in) : v{0}, s{0}, h{0}
+  {
+    const UInt8 rgbMin = std::min({in.r, in.g, in.b});
+    v = std::max({in.r, in.g, in.b});
+
+    if (v == 0) { h = 0; s = 0; }
+    else
+    {
+      s = (255 * UInt16(v - rgbMin)) / v;
+      if (s == 0)         h = 0;
+      else if (v == in.r) h = 0   + 43 * (in.g - in.b) / (v - rgbMin);
+      else if (v == in.g) h = 85  + 43 * (in.b - in.r) / (v - rgbMin);
+      else                h = 171 + 43 * (in.r - in.g) / (v - rgbMin);
+    }
+
+    v = UInt16(v * 255) / UInt16(in.a);
+  }
+
+  /*** RGB ***/
   // Default Constructor
   constexpr Color::Color() :
     a{0xff}, b{0}, g{0}, r{0} {}
@@ -87,6 +129,34 @@ namespace spgl // Implementation
                          const UInt8 ib, const UInt8 ia)
                          : a{ia}, b{ib} , g{ig}, r{ir} {}
 
+  // HSV Constructor
+  constexpr Color::Color(const HSV in) : a{0xff}, b{0}, g{0}, r{0}
+  {
+    if (in.s == 0)
+    {
+        r = in.v;
+        g = in.v;
+        b = in.v;
+    } else
+    {
+      const UInt8 rem = (in.h % 43) * 6;
+
+      const UInt8 p = (in.v * ~in.s) >> 8;
+      const UInt8 q = (in.v * ~UInt8((in.s * rem) >> 8)) >> 8;
+      const UInt8 t = (in.v * ~UInt8((in.s * ~rem) >> 8)) >> 8;
+
+      switch (in.h / 43)
+      {
+          case 0:  r = in.v; g = t; b = p; break;
+          case 1:  r = q; g = in.v; b = p; break;
+          case 2:  r = p; g = in.v; b = t; break;
+          case 3:  r = p; g = q; b = in.v; break;
+          case 4:  r = t; g = p; b = in.v; break;
+          default: r = in.v; g = p; b = q; break;
+      }
+    }
+  }
+
   // Grayscale Constructor
   constexpr Color::Color(const UInt8 in) : a{0xff}, b{in} , g{in}, r{in} {}
 
@@ -98,39 +168,12 @@ namespace spgl // Implementation
             (b << ((order >> 1) & 6)) | (a << ((order << 1) & 6));
   }
 
-  // HSV
-  void Color::setHSV(UInt8 h, UInt8 s = 0xff, UInt8 v = 0xff)
-  {
-    if (s == 0)
-    {
-        r = v;
-        g = v;
-        b = v;
-    }
-
-    UInt8 region, remainder, p, q, t;
-
-    region = h / 43;
-    remainder = (h - (region * 43)) * 6;
-
-    p = (v * (0xff - s)) >> 8;
-    q = (v * (0xff - ((s * remainder) >> 8))) >> 8;
-    t = (v * (0xff - ((s * (0xff - remainder)) >> 8))) >> 8;
-
-    switch (region)
-    {
-        case 0:  r = v; g = t; b = p; break;
-        case 1:  r = q; g = v; b = p; break;
-        case 2:  r = p; g = v; b = t; break;
-        case 3:  r = p; g = q; b = v; break;
-        case 4:  r = t; g = p; b = v; break;
-        default: r = v; g = p; b = q; break;
-    }
-  }
-
   // Operators
   bool operator==(const Color a, const Color b)
   { return (a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a); }
+
+  bool operator!=(const Color a, const Color b)
+  { return !(a == b); }
 
   // Static Variables
   const Color Color::Black = Color(0x00);

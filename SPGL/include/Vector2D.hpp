@@ -17,6 +17,24 @@ namespace SPGL
 
     Vector2D(const T ix, const T iy) : x{ix}, y{iy} {}
 
+  public: /* Operators */
+  friend Vector2D<T>& operator+=(Vector2D<T>& a, const Vector2D<T> b);
+  friend Vector2D<T>& operator+ (Vector2D<T>& a, const Vector2D<T> b);
+  friend Vector2D<T>& operator-=(Vector2D<T>& a, const Vector2D<T> b);
+  friend Vector2D<T>& operator- (Vector2D<T>& a, const Vector2D<T> b);
+  friend Vector2D<T>& operator*=(Vector2D<T>& a, const Vector2D<T> b);
+  friend Vector2D<T>& operator* (Vector2D<T>& a, const Vector2D<T> b);
+  friend Vector2D<T>& operator/=(Vector2D<T>& a, const Vector2D<T> b);
+  friend Vector2D<T>& operator/ (Vector2D<T>& a, const Vector2D<T> b);
+
+  friend bool operator==(const Vector2D<T> a, const Vector2D<T> b);
+  friend bool operator!=(const Vector2D<T> a, const Vector2D<T> b);
+
+  friend bool operator< (const Vector2D<T> a, const Vector2D<T> b);
+  friend bool operator>=(const Vector2D<T> a, const Vector2D<T> b);
+  friend bool operator> (const Vector2D<T> a, const Vector2D<T> b);
+  friend bool operator<=(const Vector2D<T> a, const Vector2D<T> b);
+
   public: /* Variables */
     T x, y;
   };
@@ -39,7 +57,7 @@ namespace SPGL // Operator Overloads
   { a.x += b.x; a.y += a.y; return a; }
 
   template<class T>
-  Vector2D<T> operator+(Vector2D<T> a, const Vector2D<T> b)
+  Vector2D<T>  operator+ (Vector2D<T> a, const Vector2D<T> b)
   { a += b; return a; }
 
   // SUB //
@@ -48,7 +66,7 @@ namespace SPGL // Operator Overloads
   { a.x -= b.x; a.y -= a.y; return a; }
 
   template<class T>
-  Vector2D<T> operator-(Vector2D<T> a, const Vector2D<T> b)
+  Vector2D<T>  operator- (Vector2D<T> a, const Vector2D<T> b)
   { a -= b; return a; }
 
   // MUL //
@@ -57,7 +75,7 @@ namespace SPGL // Operator Overloads
   { a.x *= b.x; a.y *= a.y; return a; }
 
   template<class T>
-  Vector2D<T> operator*(Vector2D<T> a, const Vector2D<T> b)
+  Vector2D<T>  operator* (Vector2D<T> a, const Vector2D<T> b)
   { a *= b; return a; }
 
   // DIV //
@@ -66,8 +84,34 @@ namespace SPGL // Operator Overloads
   { a.x /= b.x; a.y /= a.y; return a; }
 
   template<class T>
-  Vector2D<T> operator/(Vector2D<T> a, const Vector2D<T> b)
+  Vector2D<T>  operator/ (Vector2D<T> a, const Vector2D<T> b)
   { a /= b; return a; }
+
+  // EQUAL //
+  template<class T>
+  bool operator==(const Vector2D<T> a, const Vector2D<T> b)
+  { return a.x == b.x && a.y == b.y; }
+
+  template<class T>
+  bool operator!=(const Vector2D<T> a, const Vector2D<T> b)
+  { return !(a == b); }
+
+  // COMPAIR //
+  template<class T>
+  bool operator< (const Vector2D<T> a, const Vector2D<T> b)
+  { return (a.x*a.x + a.y*a.y) < (b.x*b.x + b.y*b.y); }
+
+  template<class T>
+  bool operator>=(const Vector2D<T> a, const Vector2D<T> b)
+  { return !(a < b); }
+
+  template<class T>
+  bool operator> (const Vector2D<T> a, const Vector2D<T> b)
+  { return b < a; }
+
+  template<class T>
+  bool operator<=(const Vector2D<T> a, const Vector2D<T> b)
+  { return !(a > b); }
 }
 
 #endif // SPGL_VECTOR2D_HPP

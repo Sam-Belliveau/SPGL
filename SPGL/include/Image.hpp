@@ -1,8 +1,6 @@
 #ifndef SPGL_IMAGE_HPP
 #define SPGL_IMAGE_HPP 1
 
-#include <array>
-
 #include "TypeNames.hpp"
 #include "Vector2D.hpp"
 #include "Color.hpp"
@@ -23,14 +21,18 @@ namespace SPGL // Definitions
   public: /* Constructors */
     Image();
     Image(const Image<x, y> &in);
+    Image(const void* pixels);
     Image(const Color f);
+
+  public: /* Swap */
+    void swap(Image<x, y> &in);
 
   public: /* Functions */
     Color& operator[](const Size &i);
     Color& getPixel(const Size &inX, const Size &inY);
 
   private: /* Raw Data */
-    std::array<Color, x*y> arr;
+    Color arr[x*y];
   };
 }
 
@@ -53,18 +55,35 @@ namespace SPGL // Implementation
   Size Image<x, y>::bytes()  const { return size()*sizeof(Color); }
 
   template<Size x, Size y>
-  Color* Image<x, y>::data() { return arr.data(); }
+  Color* Image<x, y>::data() { return arr; }
 
   // Constructors
   template<Size x, Size y>
   Image<x, y>::Image() {};
 
   template<Size x, Size y>
-  Image<x, y>::Image(const Image<x, y> &in) : arr{in.arr} {}
+  Image<x, y>::Image(const Image<x, y> &in)
+  { for(Size i = 0; i < size(); ++i) arr[i] = in.arr[i]; }
+
+  template<Size x, Size y>
+  Image<x, y>::Image(const void* pixels)
+  {
+    const Color* ptr = reinterpret_cast<const Color*>(pixels);
+    for(Size i = 0; i < size(); ++i) arr[i] = ptr[i];
+  }
 
   template<Size x, Size y>
   Image<x, y>::Image(const Color in)
   { for(Color& i : arr) i = in; }
+
+  // Swap
+  template<Size x, Size y>
+  void Image<x, y>::swap(Image<x, y> &in)
+  {
+    Color* temp = arr;
+    arr = in.arr;
+    in.arr = temp;
+  }
 
   // Getters
   template<Size x, Size y>

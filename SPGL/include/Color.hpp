@@ -73,17 +73,9 @@ namespace SPGL // Definitions
     UInt8 r;
 
   public: /* Static Colors */
-    static const Color Black;
-    static const Color White;
-
-    static const Color Red;
-    static const Color Green;
-    static const Color Blue;
-
-    static const Color Orange;
-    static const Color Yellow;
-    static const Color Cyan;
-    static const Color Purple;
+    static const Color Black, White;
+    static const Color Red, Green, Blue;
+    static const Color Orange, Yellow, Cyan, Purple;
   };
 }
 
@@ -99,17 +91,19 @@ namespace SPGL // Implementation
 
   constexpr Color::HSV::HSV(const Color in) : v{0}, s{0}, h{0}
   {
-    const UInt8 rgbMin = std::min({in.r, in.g, in.b});
+    /*** ALGORITHM BY: Leszek Szary (Stack Overflow User) ***/
+
+    const UInt8 min = std::min({in.r, in.g, in.b});
     v = std::max({in.r, in.g, in.b});
 
     if (v == 0) { h = 0; s = 0; }
     else
     {
-      s = (255 * UInt16(v - rgbMin)) / v;
+      s = (255 * UInt16(v - min)) / v;
       if (s == 0)         h = 0;
-      else if (v == in.r) h = 0   + 43 * (in.g - in.b) / (v - rgbMin);
-      else if (v == in.g) h = 85  + 43 * (in.b - in.r) / (v - rgbMin);
-      else                h = 171 + 43 * (in.r - in.g) / (v - rgbMin);
+      else if (v == in.r) h = 0   + 43 * (in.g - in.b) / (v - min);
+      else if (v == in.g) h = 85  + 43 * (in.b - in.r) / (v - min);
+      else                h = 171 + 43 * (in.r - in.g) / (v - min);
     }
 
     v = UInt16(v * 255) / UInt16(in.a);
@@ -132,6 +126,7 @@ namespace SPGL // Implementation
   // HSV Constructor
   constexpr Color::Color(const HSV in) : a{0xff}, b{0}, g{0}, r{0}
   {
+    /*** ALGORITHM BY: Leszek Szary (Stack Overflow User) ***/
     if (in.s == 0)
     {
         r = in.v;
@@ -141,9 +136,9 @@ namespace SPGL // Implementation
     {
       const UInt8 rem = (in.h % 43) * 6;
 
-      const UInt8 p = (in.v * ~UInt8(in.s)) >> 8;
-      const UInt8 q = (in.v * ~UInt8((in.s * rem) >> 8)) >> 8;
-      const UInt8 t = (in.v * ~UInt8((in.s * ~rem) >> 8)) >> 8;
+      const UInt8 p = (in.v * (0xff - in.s)) >> 8;
+      const UInt8 q = (in.v * (0xff - ((in.s * rem) >> 8))) >> 8;
+      const UInt8 t = (in.v * (0xff - ((in.s * (0xff - rem)) >> 8))) >> 8;
 
       switch (in.h / 43)
       {

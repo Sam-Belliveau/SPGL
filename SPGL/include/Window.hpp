@@ -11,7 +11,7 @@
 namespace SPGL // Definitions
 {
   // Main window should be made first and destroyed last
-  template<Size x, Size y, Size s = 1, bool main_window = true>
+  template<Size x, Size y, Size xs = 1, Size ys = xs, bool main_window = true>
   class Window
   {
   public: /* Functions */
@@ -28,7 +28,7 @@ namespace SPGL // Definitions
 
     /* Information */
     bool isMouseDown() const;
-    Vector2D<Size> getMousePixel() const;
+    Vector2s getMousePixel() const;
 
     /* Rendering */
     void renderImage(Image<x, y> &in);
@@ -36,7 +36,7 @@ namespace SPGL // Definitions
   private: /* Variables */
     bool running = false;
     bool mouseDown = false;
-    Vector2D<Size> mousePixel;
+    Vector2s mousePixel;
 
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -48,17 +48,17 @@ namespace SPGL // Definitions
 namespace SPGL // Implementations
 {
   /* Initalization */
-  template<Size x, Size y, Size s, bool main_window>
-  Window<x,y,s,main_window>::Window(const char* name)
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  Window<x,y,xs,ys,main_window>::Window(const char* name)
   {
     if(main_window)
     { SDL_Init(SDL_INIT_VIDEO); }
 
     window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED,
-      SDL_WINDOWPOS_UNDEFINED, x*s, y*s, 0);
+      SDL_WINDOWPOS_UNDEFINED, x*xs, y*ys, 0);
 
     renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_RenderSetScale(renderer, (float)s, (float)s);
+    SDL_RenderSetScale(renderer, (float)xs, (float)ys);
 
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
       SDL_TEXTUREACCESS_STATIC, x, y);
@@ -66,13 +66,13 @@ namespace SPGL // Implementations
     running = true;
   }
 
-  template<Size x, Size y, Size s, bool main_window>
-  Window<x,y,s,main_window>::~Window()
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  Window<x,y,xs,ys,main_window>::~Window()
   { close(); }
 
   /* Running Stuff */
-  template<Size x, Size y, Size s, bool main_window>
-  void Window<x,y,s,main_window>::close()
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  void Window<x,y,xs,ys,main_window>::close()
   {
     if(running)
     {
@@ -86,13 +86,13 @@ namespace SPGL // Implementations
     }
   }
 
-  template<Size x, Size y, Size s, bool main_window>
-  bool Window<x,y,s,main_window>::isRunning() const
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  bool Window<x,y,xs,ys,main_window>::isRunning() const
   { return running; }
 
   /* Events */
-  template<Size x, Size y, Size s, bool main_window>
-  void Window<x,y,s,main_window>::update()
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  void Window<x,y,xs,ys,main_window>::update()
   {
     if(!running) { return; }
 
@@ -115,25 +115,25 @@ namespace SPGL // Implementations
         break;
 
       case SDL_MOUSEMOTION:
-        mousePixel.x = event.motion.x/s;
-        mousePixel.y = event.motion.y/s;
+        mousePixel.x = event.motion.x/xs;
+        mousePixel.y = event.motion.y/ys;
         break;
       }
     }
   }
 
   /* Information */
-  template<Size x, Size y, Size s, bool main_window>
-  bool Window<x,y,s,main_window>::isMouseDown() const
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  bool Window<x,y,xs,ys,main_window>::isMouseDown() const
   { return mouseDown; }
 
-  template<Size x, Size y, Size s, bool main_window>
-  Vector2D<Size> Window<x,y,s,main_window>::getMousePixel() const
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  Vector2s Window<x,y,xs,ys,main_window>::getMousePixel() const
   { return mousePixel; }
 
   /* Rendering */
-  template<Size x, Size y, Size s, bool main_window>
-  void Window<x,y,s,main_window>::renderImage(Image<x, y> &in)
+  template<Size x, Size y, Size xs, Size ys, bool main_window>
+  void Window<x,y,xs,ys,main_window>::renderImage(Image<x, y> &in)
   {
     if(!running) { return; }
 

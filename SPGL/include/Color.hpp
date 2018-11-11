@@ -141,7 +141,7 @@ namespace SPGL // Implementation
     {
       const UInt8 rem = (in.h % 43) * 6;
 
-      const UInt8 p = (in.v * ~in.s) >> 8;
+      const UInt8 p = (in.v * ~UInt8(in.s)) >> 8;
       const UInt8 q = (in.v * ~UInt8((in.s * rem) >> 8)) >> 8;
       const UInt8 t = (in.v * ~UInt8((in.s * ~rem) >> 8)) >> 8;
 

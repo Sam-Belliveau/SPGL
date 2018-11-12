@@ -17,24 +17,6 @@ namespace SPGL
 
     Vector2D(const T ix, const T iy) : x{ix}, y{iy} {}
 
-  public: /* Operators */
-  friend Vector2D<T>& operator+=(Vector2D<T>& a, const Vector2D<T> b);
-  friend Vector2D<T>& operator+ (Vector2D<T>& a, const Vector2D<T> b);
-  friend Vector2D<T>& operator-=(Vector2D<T>& a, const Vector2D<T> b);
-  friend Vector2D<T>& operator- (Vector2D<T>& a, const Vector2D<T> b);
-  friend Vector2D<T>& operator*=(Vector2D<T>& a, const Vector2D<T> b);
-  friend Vector2D<T>& operator* (Vector2D<T>& a, const Vector2D<T> b);
-  friend Vector2D<T>& operator/=(Vector2D<T>& a, const Vector2D<T> b);
-  friend Vector2D<T>& operator/ (Vector2D<T>& a, const Vector2D<T> b);
-
-  friend bool operator==(const Vector2D<T> a, const Vector2D<T> b);
-  friend bool operator!=(const Vector2D<T> a, const Vector2D<T> b);
-
-  friend bool operator< (const Vector2D<T> a, const Vector2D<T> b);
-  friend bool operator>=(const Vector2D<T> a, const Vector2D<T> b);
-  friend bool operator> (const Vector2D<T> a, const Vector2D<T> b);
-  friend bool operator<=(const Vector2D<T> a, const Vector2D<T> b);
-
   public: /* Variables */
     T x, y;
   };

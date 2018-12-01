@@ -1,6 +1,6 @@
 # SPGL
 
-## Compile Options `-lSDL2`
+### Compile Options `-lSDL2`, I recomend you use clang
 
 Simple Pixel Graphics Library is a library made for drawing pixel images.
 

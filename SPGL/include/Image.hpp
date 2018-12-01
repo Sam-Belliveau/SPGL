@@ -1,6 +1,8 @@
 #ifndef SPGL_IMAGE_HPP
 #define SPGL_IMAGE_HPP 1
 
+#include <array>
+
 #include "TypeNames.hpp"
 #include "Vector2D.hpp"
 #include "Color.hpp"
@@ -20,7 +22,11 @@ namespace SPGL // Definitions
 
   public: /* Constructors */
     Image();
-    Image(const Image<x, y> &in);
+
+    // Copy Constructors
+    Image(const Image &in) = default;
+    Image& operator=(const Image &in) = default;
+
     Image(const void* pixels);
     Image(const Color f);
 
@@ -32,7 +38,7 @@ namespace SPGL // Definitions
     Color& getPixel(const Size &inX, const Size &inY);
 
   private: /* Raw Data */
-    Color arr[x*y];
+    std::array<Color, x*y> arr;
   };
 }
 
@@ -55,15 +61,11 @@ namespace SPGL // Implementation
   Size Image<x, y>::bytes()  const { return size()*sizeof(Color); }
 
   template<Size x, Size y>
-  Color* Image<x, y>::data() { return arr; }
+  Color* Image<x, y>::data() { return arr.data(); }
 
   // Constructors
   template<Size x, Size y>
   Image<x, y>::Image() {};
-
-  template<Size x, Size y>
-  Image<x, y>::Image(const Image<x, y> &in)
-  { for(Size i = 0; i < size(); ++i) arr[i] = in.arr[i]; }
 
   template<Size x, Size y>
   Image<x, y>::Image(const void* pixels)

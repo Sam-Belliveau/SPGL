@@ -11,9 +11,20 @@ namespace SPGL
   public: /* Functions */
     Vector2D() : x{0}, y{0} {}
 
+    Vector2D(const Vector2D &in) = default;
+    Vector2D& operator=(const Vector2D &in) = default;
+
     template<class iT>
     Vector2D(const Vector2D<iT> &in)
       : x{static_cast<T>(in.x)}, y{static_cast<T>(in.y)} {}
+
+    template<class iT>
+    Vector2D& operator=(const Vector2D<iT> &in)
+    {
+      x = static_cast<T>(in.x);
+      y = static_cast<T>(in.y);
+      return *this;
+    }
 
     Vector2D(const T ix, const T iy) : x{ix}, y{iy} {}
 

@@ -15,7 +15,9 @@ namespace SPGL // Definitions
     public:
       constexpr HSV();
       constexpr HSV(const UInt8 ih, const UInt8 is = 255, const UInt8 iv = 255);
-      constexpr HSV(const HSV& in);
+
+      HSV(const HSV &in) = default;
+      HSV& operator=(const HSV &in) = default;
 
       constexpr HSV(const Color in);
 
@@ -50,7 +52,8 @@ namespace SPGL // Definitions
     constexpr Color();
 
     // Copy Constructor
-    constexpr Color(const Color &in);
+    Color(const Color &in) = default;
+    Color& operator=(const Color &in) = default;
 
     // RGBA Constructor
     constexpr Color(const UInt8 ir, const UInt8 ig,
@@ -87,8 +90,6 @@ namespace SPGL // Implementation
   constexpr Color::HSV::HSV(const UInt8 ih, const UInt8 is,
                             const UInt8 iv) : v{iv}, s{is}, h{ih} {}
 
-  constexpr Color::HSV::HSV(const HSV& in) : v{in.v}, s{in.s}, h{in.h} {}
-
   constexpr Color::HSV::HSV(const Color in) : v{0}, s{0}, h{0}
   {
     /*** ALGORITHM BY: Leszek Szary (Stack Overflow User) ***/
@@ -113,10 +114,6 @@ namespace SPGL // Implementation
   // Default Constructor
   constexpr Color::Color() :
     a{0xff}, b{0}, g{0}, r{0} {}
-
-  // Copy Constructor
-  constexpr Color::Color(const Color &in) :
-    a{in.a}, b{in.b}, g{in.g}, r{in.r} {}
 
   // RGBA Constructor
   constexpr Color::Color(const UInt8 ir, const UInt8 ig,

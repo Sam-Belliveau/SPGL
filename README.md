@@ -1,4 +1,7 @@
 # SPGL
+
+## Compile Options `-lSDL2`
+
 Simple Pixel Graphics Library is a library made for drawing pixel images.
 
 It makes this really simple. Here is an example of a Mandelbrot Renderer made with this library.

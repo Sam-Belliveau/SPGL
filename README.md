@@ -19,7 +19,7 @@ int main()
   const SPGL::Size height = 480;
 
   // Make Window and Image Buffer
-  SPGL::Window<width, height, 1> win("Mandelbrot Set");
+  SPGL::Window<width, height> win("Mandelbrot Set");
   SPGL::Image<width, height> img = SPGL::Color::Black;
 
   // Iterate through image

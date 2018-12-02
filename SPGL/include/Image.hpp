@@ -36,8 +36,8 @@ namespace SPGL // Definitions
     Image(const Color f);
 
   public: /* Functions */
-    Color& operator[](const Size &i);
-    Color& getPixel(const Size &inX, const Size &inY);
+    Color& operator[](const Size i);
+    Color& getPixel(const Size inX, const Size inY);
 
   private: /* Raw Data */
     std::array<Color, x*y> arr;
@@ -79,11 +79,11 @@ namespace SPGL // Implementation
 
   // Getters
   template<Size x, Size y>
-  Color& Image<x, y>::operator[](const Size &i)
+  Color& Image<x, y>::operator[](const Size i)
   { return arr[i]; }
 
   template<Size x, Size y>
-  Color& Image<x, y>::getPixel(const Size &inX, const Size &inY)
+  Color& Image<x, y>::getPixel(const Size inX, const Size inY)
   { return arr[inY*x + inX]; }
 }
 

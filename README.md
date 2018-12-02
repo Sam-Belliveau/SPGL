@@ -1,5 +1,7 @@
 # SPGL
 
+### To Install, Drag The "SPGL" Folder Into The Root Of Your Project. Then `#include "SPGL/SPGL.hpp"`
+
 ### Compile Options `-lSDL2`, I recomend you use clang
 
 Simple Pixel Graphics Library is a library made for drawing pixel images.

@@ -21,17 +21,19 @@ namespace SPGL // Definitions
     Color* data();
 
   public: /* Constructors */
-    Image();
+    // Default Constructor
+    Image() {}
 
     // Copy Constructors
     Image(const Image &in) = default;
     Image& operator=(const Image &in) = default;
 
+    Image(Image &&in) = default;
+    Image& operator=(Image &&in) = default;
+
+    // Custom Constructors
     Image(const void* pixels);
     Image(const Color f);
-
-  public: /* Swap */
-    void swap(Image<x, y> &in);
 
   public: /* Functions */
     Color& operator[](const Size &i);
@@ -63,10 +65,7 @@ namespace SPGL // Implementation
   template<Size x, Size y>
   Color* Image<x, y>::data() { return arr.data(); }
 
-  // Constructors
-  template<Size x, Size y>
-  Image<x, y>::Image() {};
-
+  // Custom Constructors
   template<Size x, Size y>
   Image<x, y>::Image(const void* pixels)
   {
@@ -77,15 +76,6 @@ namespace SPGL // Implementation
   template<Size x, Size y>
   Image<x, y>::Image(const Color in)
   { for(Color& i : arr) i = in; }
-
-  // Swap
-  template<Size x, Size y>
-  void Image<x, y>::swap(Image<x, y> &in)
-  {
-    Color* temp = arr;
-    arr = in.arr;
-    in.arr = temp;
-  }
 
   // Getters
   template<Size x, Size y>

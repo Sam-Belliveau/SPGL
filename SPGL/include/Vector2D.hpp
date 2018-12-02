@@ -8,12 +8,15 @@ namespace SPGL
   template<class T = Int32>
   struct Vector2D
   {
-  public: /* Functions */
+  public: /* Methods */
+    // Default Constructor
     Vector2D() : x{0}, y{0} {}
 
+    // Copy Constructors
     Vector2D(const Vector2D &in) = default;
     Vector2D& operator=(const Vector2D &in) = default;
 
+    // Custom Constructors
     template<class iT>
     Vector2D(const Vector2D<iT> &in)
       : x{static_cast<T>(in.x)}, y{static_cast<T>(in.y)} {}

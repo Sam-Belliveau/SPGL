@@ -9,19 +9,22 @@ namespace SPGL // Definitions
 {
   struct Color
   {
-  public:
+  public: /* HSV Class */
     struct HSV
     {
-    public:
+    public: // Methods
+      // Default Constructor
       constexpr HSV();
-      constexpr HSV(const UInt8 ih, const UInt8 is = 255, const UInt8 iv = 255);
 
+      // Copy Constructors
       HSV(const HSV &in) = default;
       HSV& operator=(const HSV &in) = default;
 
+      // Custom Constructors
+      constexpr HSV(const UInt8 ih, const UInt8 is = 255, const UInt8 iv = 255);
       constexpr HSV(const Color in);
 
-    public:
+    public: // Variables
       UInt8 v;
       UInt8 s;
       UInt8 h;
@@ -85,8 +88,10 @@ namespace SPGL // Definitions
 namespace SPGL // Implementation
 {
   /*** HSV ***/
+  // Default Constructor
   constexpr Color::HSV::HSV() : v{0}, s{0}, h{0} {}
 
+  // Custom Constructors
   constexpr Color::HSV::HSV(const UInt8 ih, const UInt8 is,
                             const UInt8 iv) : v{iv}, s{is}, h{ih} {}
 

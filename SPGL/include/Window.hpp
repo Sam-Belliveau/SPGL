@@ -14,6 +14,10 @@ namespace SPGL // Definitions
   template<Size x, Size y, Size xs = 1, Size ys = xs, bool main_window = true>
   class Window
   {
+   private: // non-copyable
+     Window(const Window&) = delete;
+     Window& operator=(const Window&) = delete;
+
   public: /* Functions */
     /* Initalization */
     Window(const char* name = "SPGL Window");

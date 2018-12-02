@@ -10,7 +10,7 @@ namespace SPGL
   {
   public: /* Methods */
     // Default Constructor
-    Vector2D() : x{0}, y{0} {}
+    Vector2D() noexcept : x{0}, y{0} {}
 
     // Copy Constructors
     Vector2D(const Vector2D &in) = default;
@@ -18,18 +18,18 @@ namespace SPGL
 
     // Custom Constructors
     template<class iT>
-    Vector2D(const Vector2D<iT> &in)
+    Vector2D(const Vector2D<iT> &in) noexcept
       : x{static_cast<T>(in.x)}, y{static_cast<T>(in.y)} {}
 
     template<class iT>
-    Vector2D& operator=(const Vector2D<iT> &in)
+    Vector2D& operator=(const Vector2D<iT> &in) noexcept
     {
       x = static_cast<T>(in.x);
       y = static_cast<T>(in.y);
       return *this;
     }
 
-    Vector2D(const T ix, const T iy) : x{ix}, y{iy} {}
+    Vector2D(const T ix, const T iy) noexcept : x{ix}, y{iy} {}
 
   public: /* Variables */
     T x, y;

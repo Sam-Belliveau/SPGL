@@ -141,6 +141,7 @@ namespace SPGL // Implementations
   {
     if(!running) { return; }
 
+    //SDL_RenderClear(renderer);
     SDL_UpdateTexture(texture, NULL, in.data(), x*4);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);

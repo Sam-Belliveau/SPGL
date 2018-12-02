@@ -14,15 +14,15 @@ namespace SPGL // Definitions
     {
     public: // Methods
       // Default Constructor
-      constexpr HSV();
+      constexpr HSV() noexcept;
 
       // Copy Constructors
       HSV(const HSV &in) = default;
       HSV& operator=(const HSV &in) = default;
 
       // Custom Constructors
-      constexpr HSV(const UInt8 ih, const UInt8 is = 255, const UInt8 iv = 255);
-      constexpr HSV(const Color in);
+      constexpr HSV(const UInt8 ih, const UInt8 is = 255, const UInt8 iv = 255) noexcept;
+      constexpr HSV(const Color in) noexcept;
 
     public: // Variables
       UInt8 v;
@@ -52,7 +52,7 @@ namespace SPGL // Definitions
 
   public: /* Functions */
     // Default Constructor
-    constexpr Color();
+    constexpr Color() noexcept;
 
     // Copy Constructor
     Color(const Color &in) = default;
@@ -60,17 +60,17 @@ namespace SPGL // Definitions
 
     // RGBA Constructor
     constexpr Color(const UInt8 ir, const UInt8 ig,
-                    const UInt8 ib, const UInt8 ia = 0xff);
+                    const UInt8 ib, const UInt8 ia = 0xff) noexcept;
 
     // HSV Constructor
-    constexpr Color(const HSV in);
+    constexpr Color(const HSV in) noexcept;
 
     // Grayscale Constructor
-    constexpr Color(const UInt8 in);
+    constexpr Color(const UInt8 in) noexcept;
 
     // 32 bit int output
     template<ByteOrder order = ByteOrder::RGBA>
-    constexpr UInt32 toInt() const;
+    constexpr UInt32 toInt() const noexcept;
 
   public: /* Variables */
     UInt8 a;
@@ -89,13 +89,13 @@ namespace SPGL // Implementation
 {
   /*** HSV ***/
   // Default Constructor
-  constexpr Color::HSV::HSV() : v{0}, s{0}, h{0} {}
+  constexpr Color::HSV::HSV() noexcept : v{0}, s{0}, h{0} {}
 
   // Custom Constructors
   constexpr Color::HSV::HSV(const UInt8 ih, const UInt8 is,
-                            const UInt8 iv) : v{iv}, s{is}, h{ih} {}
+                            const UInt8 iv) noexcept : v{iv}, s{is}, h{ih} {}
 
-  constexpr Color::HSV::HSV(const Color in) : v{0}, s{0}, h{0}
+  constexpr Color::HSV::HSV(const Color in) noexcept : v{0}, s{0}, h{0}
   {
     /*** ALGORITHM BY: Leszek Szary (Stack Overflow User) ***/
 
@@ -117,16 +117,16 @@ namespace SPGL // Implementation
 
   /*** RGB ***/
   // Default Constructor
-  constexpr Color::Color() :
+  constexpr Color::Color() noexcept :
     a{0xff}, b{0}, g{0}, r{0} {}
 
   // RGBA Constructor
   constexpr Color::Color(const UInt8 ir, const UInt8 ig,
-                         const UInt8 ib, const UInt8 ia)
+                         const UInt8 ib, const UInt8 ia) noexcept
                          : a{ia}, b{ib} , g{ig}, r{ir} {}
 
   // HSV Constructor
-  constexpr Color::Color(const HSV in) : a{0xff}, b{0}, g{0}, r{0}
+  constexpr Color::Color(const HSV in) noexcept : a{0xff}, b{0}, g{0}, r{0}
   {
     /*** ALGORITHM BY: Leszek Szary (Stack Overflow User) ***/
     if (in.s == 0)
@@ -155,11 +155,11 @@ namespace SPGL // Implementation
   }
 
   // Grayscale Constructor
-  constexpr Color::Color(const UInt8 in) : a{0xff}, b{in} , g{in}, r{in} {}
+  constexpr Color::Color(const UInt8 in) noexcept : a{0xff}, b{in}, g{in}, r{in} {}
 
   // 32 bit int output
   template<Color::ByteOrder order>
-  constexpr UInt32 Color::toInt() const
+  constexpr UInt32 Color::toInt() const noexcept
   {
     return  (r << ((order >> 5) & 6)) | (g << ((order >> 3) & 6)) |
             (b << ((order >> 1) & 6)) | (a << ((order << 1) & 6));

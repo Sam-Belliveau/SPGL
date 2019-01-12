@@ -32,12 +32,12 @@ namespace SPGL // Definitions
 
   public: /* Enum */
     /* HOW BYTEORDER WORKS:
-     * It is stored as an 8 bit number,
-     * MSB - 0 1   2 3   4 5   6 7 - LSB
-     *       [R]   [G]   [B]   [A]
-     * Every 2 bits store the index
-     * of a color channel, you can
-     * order it any way that you want. */
+     * It is stored as an 8 bit number,  *
+     * MSB - 0 1   2 3   4 5   6 7 - LSB *
+     *       [R]   [G]   [B]   [A]       *
+     * Every 2 bits store the index      *
+     * of a color channel, you can       *
+     * order it any way that you want.   */
     enum ByteOrder : UInt8
     {
       RGBA = 0x1b, RGAB = 0x1e, RBGA = 0x27,
@@ -73,10 +73,10 @@ namespace SPGL // Definitions
     constexpr UInt32 toInt() const noexcept;
 
   public: /* Variables */
-    UInt8 a;
-    UInt8 b;
-    UInt8 g;
-    UInt8 r;
+    UInt8 a; // Variables are initalized
+    UInt8 b; // Backwards inorder to keep
+    UInt8 g; // RGBA order when used by
+    UInt8 r; // SDL2
 
   public: /* Static Colors */
     static const Color Black, White;
@@ -138,9 +138,9 @@ namespace SPGL // Implementation
     {
       const UInt8 rem = (in.h % 43) * 6;
 
-      const UInt8 p = (in.v * (0xff - in.s)) >> 8;
-      const UInt8 q = (in.v * (0xff - ((in.s * rem) >> 8))) >> 8;
-      const UInt8 t = (in.v * (0xff - ((in.s * (0xff - rem)) >> 8))) >> 8;
+      const UInt8 p = (in.v * (0xff ^ in.s)) >> 8;
+      const UInt8 q = (in.v * (0xff ^ ((in.s * rem) >> 8))) >> 8;
+      const UInt8 t = (in.v * (0xff ^ ((in.s * (0xff ^ rem)) >> 8))) >> 8;
 
       switch (in.h / 43)
       {

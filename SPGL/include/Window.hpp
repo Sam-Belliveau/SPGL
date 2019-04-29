@@ -63,6 +63,8 @@ namespace SPGL // Implementations
     window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED,
       SDL_WINDOWPOS_UNDEFINED, x*xs, y*ys, 0);
 
+    SDL_SetWindowResizable(window, SDL_TRUE);
+
     renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_RenderSetScale(renderer, (float)xs, (float)ys);
 
@@ -121,8 +123,10 @@ namespace SPGL // Implementations
         break;
 
       case SDL_MOUSEMOTION:
-        mousePixel.x = event.motion.x/xs;
-        mousePixel.y = event.motion.y/ys;
+        int xsize, ysize;
+        SDL_GetWindowSize(window, &xsize, &ysize);
+        mousePixel.x = (x*event.motion.x)/(xs*xsize);
+        mousePixel.y = (y*event.motion.y)/(ys*ysize);
         break;
       }
     }

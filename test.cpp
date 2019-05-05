@@ -23,7 +23,7 @@ int main()
             SPGL::UInt8 iter = 0;
 
             while(++iter < 255 && Z.real()*Z.real() + Z.imag()*Z.imag() < 4)
-            Z = Z*Z + C;
+                Z = Z*Z + C;
 
             // Use built in HSV to RGB conversion to get colors
             if(iter != 255) img(x, y) = SPGL::Color::HSV(iter);
@@ -31,12 +31,7 @@ int main()
     
 	// While the window is open, render the image and check for events.
 	while(win.isRunning()) 
-	{ 
-        width += height; height += width;
-
-        // Iterate through image
-        SPGL::Vector2s mouse = win.getMouseImagePixel();
-        
+	{
 		win.renderImage(img); 
         win.update(); 
 	}

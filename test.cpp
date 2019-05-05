@@ -5,12 +5,12 @@
 
 int main()
 {
-	// Define Width and Height
-	SPGL::Size width = 640;
-	SPGL::Size height = 480;
+    // Define Width and Height
+    SPGL::Size width = 640;
+    SPGL::Size height = 480;
 
-	// Make Window and Image Buffer
-	SPGL::Window<> win(width, height, "Mandelbrot Set");
+    // Make Window and Image Buffer
+    SPGL::Window<> win(width, height, "Mandelbrot Set");
     SPGL::Image img(width, height);
     
     for(SPGL::Size y = 0; y < height; ++y)
@@ -29,10 +29,10 @@ int main()
             if(iter != 255) img(x, y) = SPGL::Color::HSV(iter);
         }
     
-	// While the window is open, render the image and check for events.
-	while(win.isRunning()) 
-	{
-		win.renderImage(img); 
+    // While the window is open, render the image and check for events.
+    while(win.isRunning()) 
+    {
+        win.renderImage(img); 
         win.update(); 
-	}
+    }
 }

@@ -16,7 +16,7 @@ It makes this really simple. Here is an example of a Mandelbrot Renderer made wi
 
 int main()
 {
-	// Define Width and Height
+    // Define Width and Height
 	SPGL::Size width = 640;
 	SPGL::Size height = 480;
 

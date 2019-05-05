@@ -40,11 +40,11 @@ int main()
             if(iter != 255) img(x, y) = SPGL::Color::HSV(iter);
         }
     
-	// While the window is open, render the image and check for events.
-	while(win.isRunning()) 
-	{
-		win.renderImage(img); 
+    // While the window is open, render the image and check for events.
+    while(win.isRunning()) 
+    {
+        win.renderImage(img); 
         win.update(); 
-	}
+    }
 }
 ```

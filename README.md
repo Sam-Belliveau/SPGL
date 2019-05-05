@@ -17,11 +17,11 @@ It makes this really simple. Here is an example of a Mandelbrot Renderer made wi
 int main()
 {
     // Define Width and Height
-	SPGL::Size width = 640;
-	SPGL::Size height = 480;
+    SPGL::Size width = 640;
+    SPGL::Size height = 480;
 
-	// Make Window and Image Buffer
-	SPGL::Window<> win(width, height, "Mandelbrot Set");
+    // Make Window and Image Buffer
+    SPGL::Window<> win(width, height, "Mandelbrot Set");
     SPGL::Image img(width, height);
     
     for(SPGL::Size y = 0; y < height; ++y)

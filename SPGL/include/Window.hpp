@@ -114,7 +114,7 @@ namespace SPGL // Definitions
         Vector2s getImageSize() const { return image_size; }
 
         /* Rendering */
-        void renderImage(Image &in)
+        void renderImage(const Image &in)
         {
             if(!running) { return; }
 

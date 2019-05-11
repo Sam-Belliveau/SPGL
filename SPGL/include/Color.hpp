@@ -85,21 +85,16 @@ namespace SPGL // Definitions
                         : a{ia}, b{ib} , g{ig}, r{ir} {}
 
         // HSV Constructor
-        constexpr Color(const HSV in) noexcept : a{0xff}, b{0}, g{0}, r{0}
+        constexpr Color(const HSV in) noexcept : a{0xff}, b{in.s}, g{in.s}, r{in.s}
         {
             /*** ALGORITHM BY: Leszek Szary (Stack Overflow User) ***/
-            if (in.s == 0)
-            {
-                r = in.v;
-                g = in.v;
-                b = in.v;
-            } else
+            if (in.s != 0)
             {
                 const UInt8 rem = (in.h % 43) * 6;
 
-                const UInt8 p = (in.v * (0xff ^ in.s)) >> 8;
-                const UInt8 q = (in.v * (0xff ^ ((in.s * rem) >> 8))) >> 8;
-                const UInt8 t = (in.v * (0xff ^ ((in.s * (0xff ^ rem)) >> 8))) >> 8;
+                const UInt8 p = (in.v * ~in.s) >> 8;
+                const UInt8 q = (in.v * ~((in.s *  rem) >> 8)) >> 8;
+                const UInt8 t = (in.v * ~((in.s * ~rem) >> 8)) >> 8;
 
                 switch (in.h / 43)
                 {

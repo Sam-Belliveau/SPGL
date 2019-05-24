@@ -2,7 +2,7 @@
 
 ### To Install, Drag The "SPGL" Folder Into The Root Of Your Project. 
 
-### Compile Options `-lSDL2`, I recomend you use `clang++` to avoid long compile times
+### Compile Options `-lSDL2` and `-std=c++17` if you need to, I recommend you use `clang++` to avoid long compile times
 
 Simple Pixel Graphics Library is a library made for drawing pixel images.
 

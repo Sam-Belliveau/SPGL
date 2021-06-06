@@ -151,6 +151,7 @@ namespace SPGL // Definitions
             setB(IntMax(b) + IntMax(rhs.b));
             setG(IntMax(g) + IntMax(rhs.g));
             setR(IntMax(r) + IntMax(rhs.r));
+            return *this;
         }
 
         constexpr Color& operator-=(const Color& rhs) noexcept
@@ -159,6 +160,7 @@ namespace SPGL // Definitions
             setB(IntMax(b) - IntMax(rhs.b));
             setG(IntMax(g) - IntMax(rhs.g));
             setR(IntMax(r) - IntMax(rhs.r));
+            return *this;
         }
 
         template<typename T>
@@ -168,6 +170,7 @@ namespace SPGL // Definitions
             setB(IntMax(T(b) * rhs));
             setG(IntMax(T(g) * rhs));
             setR(IntMax(T(r) * rhs));
+            return *this;
         }
 
         template<typename T>
@@ -177,6 +180,7 @@ namespace SPGL // Definitions
             setB(IntMax(T(b) / rhs));
             setG(IntMax(T(g) / rhs));
             setR(IntMax(T(r) / rhs));
+            return *this;
         }
 
     public: /* Static Colors */

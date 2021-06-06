@@ -9,6 +9,14 @@ namespace SPGL // Definitions
 {
     struct Color
     {
+    private: /* Helper Functions */
+        constexpr static UInt8 clamp(IntMax i) noexcept 
+        {
+            if(255 < i) return 255;
+            if(i < 0) return 0;
+            return UInt8(i);
+        }
+
     public: /* HSV Class */
         struct HSV
         {
@@ -21,8 +29,8 @@ namespace SPGL // Definitions
             HSV& operator=(const HSV &in) = default;
 
             // Custom Constructors
-            constexpr HSV(const UInt8 ih, const UInt8 is = 255, const UInt8 iv = 255) noexcept
-                : v{iv}, s{is}, h{ih} {}
+            constexpr HSV(const IntSize ih, const IntSize is = 255, const IntSize iv = 255) noexcept
+                : v{clamp(iv)}, s{clamp(is)}, h{clamp(ih)} {}
 
             constexpr HSV(const Color in) noexcept
                 : v{0}, s{0}, h{0}
@@ -44,6 +52,11 @@ namespace SPGL // Definitions
 
                 v = UInt16(v * 255) / UInt16(in.a);
             }
+
+        public: // Setter Functions
+            constexpr HSV& setH(IntMax ih) const noexcept { h = clamp(ih); return *this; }
+            constexpr HSV& setS(IntMax is) const noexcept { s = clamp(is); return *this; }
+            constexpr HSV& setV(IntMax iv) const noexcept { v = clamp(iv); return *this; }
 
         public: // Variables
             UInt8 v;
@@ -80,9 +93,9 @@ namespace SPGL // Definitions
         Color& operator=(const Color &in) = default;
 
         // RGBA Constructor
-        constexpr Color(const UInt8 ir, const UInt8 ig,
-                        const UInt8 ib, const UInt8 ia = 0xff) noexcept
-                        : a{ia}, b{ib} , g{ig}, r{ir} {}
+        constexpr Color(const IntMax ir, const IntMax ig,
+                        const IntMax ib, const IntMax ia = 0xff) noexcept
+                        : a{clamp(ia)}, b{clamp(ib)}, g{clamp(ig)}, r{clamp(ir)} {}
 
         // HSV Constructor
         constexpr Color(const HSV in) noexcept : a{0xff}, b{in.s}, g{in.s}, r{in.s}
@@ -125,6 +138,47 @@ namespace SPGL // Definitions
         UInt8 g; // RGBA order when used by
         UInt8 r; // SDL2
 
+    public: /* Setter Functions */
+        constexpr Color& setA(IntMax ia) const noexcept { a = clamp(ia); return *this; }
+        constexpr Color& setB(IntMax ib) const noexcept { b = clamp(ib); return *this; }
+        constexpr Color& setG(IntMax ig) const noexcept { g = clamp(ig); return *this; }
+        constexpr Color& setR(IntMax ir) const noexcept { r = clamp(ir); return *this; }
+
+    public: /* Math Operators */
+        constexpr Color& operator+=(const Color& rhs) noexcept
+        {
+            setA(IntMax(a) + IntMax(rhs.a));
+            setB(IntMax(b) + IntMax(rhs.b));
+            setG(IntMax(g) + IntMax(rhs.g));
+            setR(IntMax(r) + IntMax(rhs.r));
+        }
+
+        constexpr Color& operator-=(const Color& rhs) noexcept
+        {
+            setA(IntMax(a) - IntMax(rhs.a));
+            setB(IntMax(b) - IntMax(rhs.b));
+            setG(IntMax(g) - IntMax(rhs.g));
+            setR(IntMax(r) - IntMax(rhs.r));
+        }
+
+        template<typename T>
+        constexpr Color& operator*=(const T& rhs) noexcept
+        {
+            setA(IntMax(T(a) * rhs));
+            setB(IntMax(T(b) * rhs));
+            setG(IntMax(T(g) * rhs));
+            setR(IntMax(T(r) * rhs));
+        }
+
+        template<typename T>
+        constexpr Color& operator/=(const T& rhs) noexcept
+        {
+            setA(IntMax(T(a) / rhs));
+            setB(IntMax(T(b) / rhs));
+            setG(IntMax(T(g) / rhs));
+            setR(IntMax(T(r) / rhs));
+        }
+
     public: /* Static Colors */
         static const Color Black, White;
         static const Color Red, Green, Blue;
@@ -135,11 +189,30 @@ namespace SPGL // Definitions
 namespace SPGL // Implementation
 {
     // Operators
-    bool operator==(const Color a, const Color b)
+    constexpr bool operator==(const Color a, const Color b)
     { return (a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a); }
 
-    bool operator!=(const Color a, const Color b)
+    constexpr bool operator!=(const Color a, const Color b)
     { return !(a == b); }
+
+    // Math Operators
+    constexpr Color operator+(Color lhs, const Color& rhs) 
+    { return lhs += rhs; }
+
+    constexpr Color operator-(Color lhs, const Color& rhs) 
+    { return lhs -= rhs; }
+
+    template<typename T>
+    constexpr Color operator*(Color lhs, const T& rhs) 
+    { return lhs *= rhs; }
+
+    template<typename T>
+    constexpr Color operator*(const T& lhs, Color rhs) 
+    { return rhs *= lhs; }
+
+    template<typename T>
+    constexpr Color operator/(Color lhs, const T& rhs) 
+    { return lhs /= rhs; }
 
     // Static Variables
     const Color Color::Black = Color(0x00);

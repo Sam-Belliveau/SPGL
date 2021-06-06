@@ -29,7 +29,7 @@ namespace SPGL // Definitions
             HSV& operator=(const HSV &in) = default;
 
             // Custom Constructors
-            constexpr HSV(const IntSize ih, const IntSize is = 255, const IntSize iv = 255) noexcept
+            constexpr HSV(const IntMax ih, const IntMax is = 255, const IntMax iv = 255) noexcept
                 : v{clamp(iv)}, s{clamp(is)}, h{clamp(ih)} {}
 
             constexpr HSV(const Color in) noexcept
@@ -54,9 +54,9 @@ namespace SPGL // Definitions
             }
 
         public: // Setter Functions
-            constexpr HSV& setH(IntMax ih) const noexcept { h = clamp(ih); return *this; }
-            constexpr HSV& setS(IntMax is) const noexcept { s = clamp(is); return *this; }
-            constexpr HSV& setV(IntMax iv) const noexcept { v = clamp(iv); return *this; }
+            constexpr HSV& setH(IntMax ih) noexcept { h = clamp(ih); return *this; }
+            constexpr HSV& setS(IntMax is) noexcept { s = clamp(is); return *this; }
+            constexpr HSV& setV(IntMax iv) noexcept { v = clamp(iv); return *this; }
 
         public: // Variables
             UInt8 v;
@@ -139,10 +139,10 @@ namespace SPGL // Definitions
         UInt8 r; // SDL2
 
     public: /* Setter Functions */
-        constexpr Color& setA(IntMax ia) const noexcept { a = clamp(ia); return *this; }
-        constexpr Color& setB(IntMax ib) const noexcept { b = clamp(ib); return *this; }
-        constexpr Color& setG(IntMax ig) const noexcept { g = clamp(ig); return *this; }
-        constexpr Color& setR(IntMax ir) const noexcept { r = clamp(ir); return *this; }
+        constexpr Color& setA(IntMax ia) noexcept { a = clamp(ia); return *this; }
+        constexpr Color& setB(IntMax ib) noexcept { b = clamp(ib); return *this; }
+        constexpr Color& setG(IntMax ig) noexcept { g = clamp(ig); return *this; }
+        constexpr Color& setR(IntMax ir) noexcept { r = clamp(ir); return *this; }
 
     public: /* Math Operators */
         constexpr Color& operator+=(const Color& rhs) noexcept

@@ -103,11 +103,11 @@ namespace SPGL // Definitions
             /*** ALGORITHM BY: Leszek Szary (Stack Overflow User) ***/
             if (in.s != 0)
             {
-                const UInt8 rem = (in.h % 43) * 6;
+                const UInt16 rem = (in.h % 43) * 6;
 
-                const UInt8 p = (in.v * ~in.s) >> 8;
-                const UInt8 q = (in.v * ~((in.s *  rem) >> 8)) >> 8;
-                const UInt8 t = (in.v * ~((in.s * ~rem) >> 8)) >> 8;
+                const UInt8 p = (UInt16(in.v) * (255 - in.s)) >> 8;
+                const UInt8 q = (UInt16(in.v) * (255 - ((in.s *  rem) >> 8))) >> 8;
+                const UInt8 t = (UInt16(in.v) * (255 - ((in.s * (255 - rem)) >> 8))) >> 8;
 
                 switch (in.h / 43)
                 {
